@@ -17,6 +17,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # Copy resources to the .pak directories
+      - name: Copy Files
+        run: cp -r resources/* */*.pak/
+
       # Create a ZIP file of the repository excluding certain files
       - name: Create ZIP Package
         run: zip -r minui-favorites.zip ./* -x ".github" "LICENSE" "README.md"

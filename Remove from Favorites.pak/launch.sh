@@ -1,21 +1,53 @@
 #!/bin/sh
 
+trap "killall sdl2imgshow" EXIT INT TERM HUP QUIT
+
+show_message() {
+    message="$1"
+    seconds="$2"
+
+    if [ -z "$seconds" ]; then
+        seconds="forever"
+    fi
+
+    killall sdl2imgshow
+    echo "$message"
+    if [ "$seconds" = "forever" ]; then
+        "./sdl2imgshow" \
+            -i "./background.png" \
+            -f "./BPreplayBold.otf" \
+            -s 27 \
+            -c "220,220,220" \
+            -q \
+            -t "$message" >/dev/null 2>&1 &
+    else
+        "./sdl2imgshow" \
+            -i "./background.png" \
+            -f "./BPreplayBold.otf" \
+            -s 27 \
+            -c "220,220,220" \
+            -q \
+            -t "$message" >/dev/null 2>&1
+        sleep "$seconds"
+    fi
+}
+
 DIR="$(dirname "$0")"
-cd "$DIR"
+cd "$DIR" || exit 1
 
 COLLECTIONS_PATH="/mnt/SDCARD/Collections"
 RECENTS_PATH="/mnt/SDCARD/.userdata/shared/.minui/recent.txt"
 FAVORITES_PATH="$COLLECTIONS_PATH/1) Favorites.txt"
 
 if [ ! -s "$RECENTS_PATH" ]; then
-  show.elf "$DIR/failed.png" 5
+  show_message "Failed to remove game from Favorites." 5
   exit 1
 fi
 
 MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
 
 if [ ! -s "$FAVORITES_PATH" ]; then
-  show.elf "$DIR/failed.png" 5
+  show_message "Failed to remove game from Favorites." 5
   exit 1
 fi
 
@@ -28,4 +60,4 @@ if [ ! -s "$FAVORITES_PATH" ]; then
   rm -f "$FAVORITES_PATH"
 fi
 
-show.elf "$DIR/success.png" 5
+show_message "Removed the most recently played game from Favorites." 5
