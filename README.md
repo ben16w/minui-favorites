@@ -30,6 +30,11 @@ This tool removes your most recently played game from the Favorites collection. 
 
 This tool clears your Recently Played list. Be warned, the list will be cleared without confirmation.
 
+## Acknowledgements
+
+- [MinUI](https://github.com/shauninman/MinUI) by Shaun Inman
+- [sdl2imgshow](https://github.com/kloptops/sdl2imgshow) by kloptops
+
 ## License
 
 This project is released under the Unlicense. For more information, see the [LICENSE](LICENSE) file.
