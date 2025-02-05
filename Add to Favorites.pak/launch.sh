@@ -6,30 +6,15 @@ show_message() {
     message="$1"
     seconds="$2"
 
-    if [ -z "$seconds" ]; then
-        seconds="forever"
-    fi
-
     killall sdl2imgshow
-    echo "$message"
-    if [ "$seconds" = "forever" ]; then
-        "./sdl2imgshow" \
-            -i "./background.png" \
-            -f "./BPreplayBold.otf" \
-            -s 27 \
-            -c "220,220,220" \
-            -q \
-            -t "$message" >/dev/null 2>&1 &
-    else
-        "./sdl2imgshow" \
-            -i "./background.png" \
-            -f "./BPreplayBold.otf" \
-            -s 27 \
-            -c "220,220,220" \
-            -q \
-            -t "$message" >/dev/null 2>&1
-        sleep "$seconds"
-    fi
+    "./sdl2imgshow" \
+        -i "./background.png" \
+        -f "./BPreplayBold.otf" \
+        -s 27 \
+        -c "220,220,220" \
+        -q \
+        -t "$message" >/dev/null 2>&1
+    sleep "$seconds"
 }
 
 DIR="$(dirname "$0")"
