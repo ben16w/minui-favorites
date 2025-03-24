@@ -31,7 +31,11 @@ main_screen() {
     rm -f "$minui_list_file"
     touch "$minui_list_file"
 
-    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
+    if [ -s "$RECENTS_PATH" ]; then
+        MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
+    else
+        MOST_RECENT_GAME_NAME="Recents empty"
+    fi
 
     echo "Add to Favorites" >> "$minui_list_file"
     echo "Remove from Favorites" >> "$minui_list_file"
@@ -48,7 +52,6 @@ add_favorite() {
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
-    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
 
     mkdir -p "$COLLECTIONS_PATH"
     touch "$FAVORITES_PATH"
@@ -59,7 +62,7 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully added \"$MOST_RECENT_GAME_NAME\" to Favorites." 5
+    show_message "Successfully added game to Favorites." 5
     return 0
 }
 
@@ -70,7 +73,6 @@ remove_favorite() {
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
-    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
 
     if [ ! -s "$FAVORITES_PATH" ]; then
         show_message "The Favorites list is empty" 5
@@ -78,15 +80,15 @@ remove_favorite() {
     fi
 
     if grep -Fxq "$MOST_RECENT_GAME" "$FAVORITES_PATH"; then
-    grep -Fxv "$MOST_RECENT_GAME" "$FAVORITES_PATH" > "$FAVORITES_PATH.tmp"
-    mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
+        grep -Fxv "$MOST_RECENT_GAME" "$FAVORITES_PATH" > "$FAVORITES_PATH.tmp"
+        mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
     if [ ! -s "$FAVORITES_PATH" ]; then
-    rm -f "$FAVORITES_PATH"
+        rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully removed \"$MOST_RECENT_GAME_NAME\" from Favorites." 5
+    show_message "Successfully removed game from Favorites." 5
     return 0
 }
 
@@ -99,7 +101,7 @@ clear_recents() {
     rm "$RECENTS_PATH"
     touch "$RECENTS_PATH"
 
-    show_message "Successfully cleared Recently Played list." 5
+    show_message "Successfully cleared the Recently Played list." 5
     return 0
 }
 
