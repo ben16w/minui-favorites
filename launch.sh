@@ -1,4 +1,5 @@
 #!/bin/sh
+
 PAK_DIR="$(dirname "$0")"
 PAK_NAME="$(basename "$PAK_DIR")"
 PAK_NAME="${PAK_NAME%.*}"
@@ -26,6 +27,9 @@ RECENTS_PATH="/mnt/SDCARD/.userdata/shared/.minui/recent.txt"
 FAVORITES_PATH="$COLLECTIONS_PATH/1) Favorites.txt"
 
 main_screen() {
+    minui_list_file="/tmp/minui-list"
+    rm -f "$minui_list_file"
+    touch "$minui_list_file"
     echo "Add to Favorites" >>"$minui_list_file"
     echo "Remove from Favorites" >>"$minui_list_file"
     echo "Clear Recently Played" >>"$minui_list_file"
@@ -36,7 +40,7 @@ main_screen() {
 
 add_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "Failed to stop wifi!" 2
+        show_message "Recent games list is empty" 2
         exit 1
     fi
 
@@ -51,19 +55,19 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Failed to stop wifi!" 2
+    show_message "Successfully added to favorites!" 2
 }
 
 remove_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-    show_message "Failed to stop wifi!" 2
+        show_message "Recent games list is empty" 2
     exit 1
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
 
     if [ ! -s "$FAVORITES_PATH" ]; then
-    show_message "Failed to stop wifi!" 2
+        show_message "Favorites list is empty" 2
     exit 1
     fi
 
@@ -76,19 +80,19 @@ remove_favorite() {
     rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Failed to stop wifi!" 2
+    show_message "Successfully removed from favorites!" 2
 }
 
 clear_recents() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "Failed to stop wifi!" 2
+        show_message "Recent games list is empty" 2
         exit 1
     fi
 
     rm "$RECENTS_PATH"
     touch "$RECENTS_PATH"
 
-    show_message "Failed to stop wifi!" 2
+    show_message "Successfully cleared recently played!" 2
 }
 
 show_message() {
