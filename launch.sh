@@ -46,6 +46,7 @@ add_favorite() {
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
+    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
 
     mkdir -p "$COLLECTIONS_PATH"
     touch "$FAVORITES_PATH"
@@ -56,8 +57,8 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully added game to favorites!" 2
-
+    show_message "Successfully added $MOST_RECENT_GAME_NAME to favorites!" 2
+    return 0
 }
 
 remove_favorite() {
@@ -67,6 +68,7 @@ remove_favorite() {
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
+    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
 
     if [ ! -s "$FAVORITES_PATH" ]; then
         show_message "The favorites list is empty" 2
@@ -82,8 +84,8 @@ remove_favorite() {
     rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully removed game from favorites!" 2
-
+    show_message "Successfully removed $MOST_RECENT_GAME_NAME from favorites!" 2
+    return 0
 }
 
 clear_recents() {
@@ -96,7 +98,7 @@ clear_recents() {
     touch "$RECENTS_PATH"
 
     show_message "Successfully cleared recently played list!" 2
-
+    return 0
 }
 
 show_message() {
