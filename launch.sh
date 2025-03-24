@@ -31,12 +31,12 @@ main_screen() {
     rm -f "$minui_list_file"
     touch "$minui_list_file"
 
-    echo "Add to Favorites" >>"$minui_list_file"
-    echo "Remove from Favorites" >>"$minui_list_file"
-    echo "Clear Recently Played" >>"$minui_list_file"
+    echo "Add to Favorites" >> "$minui_list_file"
+    echo "Remove from Favorites" >> "$minui_list_file"
+    echo "Clear Recently Played" >> "$minui_list_file"
 
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text --title "Manage Favorites"
+    minui-list --file "$minui_list_file" --format text
 }
 
 add_favorite() {
@@ -56,8 +56,8 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully added $MOST_RECENT_GAME to favorites!" 2
-    return 0
+    show_message "Successfully added game to favorites!" 2
+
 }
 
 remove_favorite() {
@@ -82,8 +82,8 @@ remove_favorite() {
     rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully removed $MOST_RECENT_GAME from favorites!" 2
-    return 0
+    show_message "Successfully removed game from favorites!" 2
+
 }
 
 clear_recents() {
@@ -96,7 +96,7 @@ clear_recents() {
     touch "$RECENTS_PATH"
 
     show_message "Successfully cleared recently played list!" 2
-    return 0
+
 }
 
 show_message() {
