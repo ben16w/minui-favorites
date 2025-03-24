@@ -46,6 +46,7 @@ This tool clears your Recently Played list. Be warned, the list will be cleared 
 
 - [MinUI](https://github.com/shauninman/MinUI) by Shaun Inman
 - [minui-list](https://github.com/josegonzalez/minui-list) and [minui-presenter](https://github.com/josegonzalez/minui-presenter) by Jose Diaz-Gonzalez
+- Also thank you Jose Diaz-Gonzalez for your pak repositories, which I based this project on.
 
 ## License
 
