@@ -31,17 +31,19 @@ main_screen() {
     rm -f "$minui_list_file"
     touch "$minui_list_file"
 
+    MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
+
     echo "Add to Favorites" >> "$minui_list_file"
     echo "Remove from Favorites" >> "$minui_list_file"
     echo "Clear Recently Played" >> "$minui_list_file"
 
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text
+    minui-list --file "$minui_list_file" --format text --title "Recently Played: $MOST_RECENT_GAME_NAME"
 }
 
 add_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The recent games list is empty." 2
+        show_message "The Recently Played list is empty." 5
         return 1
     fi
 
@@ -57,13 +59,13 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully added $MOST_RECENT_GAME_NAME to favorites!" 2
+    show_message "Successfully added \"$MOST_RECENT_GAME_NAME\" to Favorites." 5
     return 0
 }
 
 remove_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The recent games list is empty." 2
+        show_message "The Recently Played list is empty." 5
         return 1
     fi
 
@@ -71,7 +73,7 @@ remove_favorite() {
     MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
 
     if [ ! -s "$FAVORITES_PATH" ]; then
-        show_message "The favorites list is empty" 2
+        show_message "The Favorites list is empty" 5
         return 1
     fi
 
@@ -84,20 +86,20 @@ remove_favorite() {
     rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully removed $MOST_RECENT_GAME_NAME from favorites!" 2
+    show_message "Successfully removed \"$MOST_RECENT_GAME_NAME\" from Favorites." 5
     return 0
 }
 
 clear_recents() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The recent games list is empty." 2
+        show_message "The Recently Played list is empty." 5
         return 1
     fi
 
     rm "$RECENTS_PATH"
     touch "$RECENTS_PATH"
 
-    show_message "Successfully cleared recently played list!" 2
+    show_message "Successfully cleared Recently Played list." 5
     return 0
 }
 
