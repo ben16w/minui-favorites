@@ -34,7 +34,7 @@ main_screen() {
     if [ -s "$RECENTS_PATH" ]; then
         MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
     else
-        MOST_RECENT_GAME_NAME="Recents empty"
+        MOST_RECENT_GAME_NAME="recents empty"
     fi
 
     echo "Add to Favorites" >> "$minui_list_file"
