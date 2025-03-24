@@ -30,18 +30,19 @@ main_screen() {
     minui_list_file="/tmp/minui-list"
     rm -f "$minui_list_file"
     touch "$minui_list_file"
+
     echo "Add to Favorites" >>"$minui_list_file"
     echo "Remove from Favorites" >>"$minui_list_file"
     echo "Clear Recently Played" >>"$minui_list_file"
 
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text --title "Favorites"
+    minui-list --file "$minui_list_file" --format text --title "Manage Favorites"
 }
 
 add_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "Recent games list is empty" 2
-        exit 1
+        show_message "The recent games list is empty." 2
+        return 1
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
@@ -55,20 +56,21 @@ add_favorite() {
         mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully added to favorites!" 2
+    show_message "Successfully added $MOST_RECENT_GAME to favorites!" 2
+    return 0
 }
 
 remove_favorite() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "Recent games list is empty" 2
-    exit 1
+        show_message "The recent games list is empty." 2
+        return 1
     fi
 
     MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
 
     if [ ! -s "$FAVORITES_PATH" ]; then
-        show_message "Favorites list is empty" 2
-    exit 1
+        show_message "The favorites list is empty" 2
+        return 1
     fi
 
     if grep -Fxq "$MOST_RECENT_GAME" "$FAVORITES_PATH"; then
@@ -80,19 +82,21 @@ remove_favorite() {
     rm -f "$FAVORITES_PATH"
     fi
 
-    show_message "Successfully removed from favorites!" 2
+    show_message "Successfully removed $MOST_RECENT_GAME from favorites!" 2
+    return 0
 }
 
 clear_recents() {
     if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "Recent games list is empty" 2
-        exit 1
+        show_message "The recent games list is empty." 2
+        return 1
     fi
 
     rm "$RECENTS_PATH"
     touch "$RECENTS_PATH"
 
-    show_message "Successfully cleared recently played!" 2
+    show_message "Successfully cleared recently played list!" 2
+    return 0
 }
 
 show_message() {
