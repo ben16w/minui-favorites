@@ -22,87 +22,13 @@ export HOME="$USERDATA_PATH/$PAK_NAME"
 export LD_LIBRARY_PATH="$PAK_DIR/lib/$PLATFORM:$PAK_DIR/lib:$LD_LIBRARY_PATH"
 export PATH="$PAK_DIR/bin/$architecture:$PAK_DIR/bin/$PLATFORM:$PAK_DIR/bin:$PATH"
 
-COLLECTIONS_PATH="/mnt/SDCARD/Collections"
-RECENTS_PATH="/mnt/SDCARD/.userdata/shared/.minui/recent.txt"
+COLLECTIONS_PATH="$SDCARD_PATH/Collections"
+RECENTS_PATH="$SHARED_USERDATA_PATH/.minui/recent.txt"
 FAVORITES_PATH="$COLLECTIONS_PATH/1) Favorites.txt"
 
-main_screen() {
-    minui_list_file="/tmp/minui-list"
-    rm -f "$minui_list_file"
-    touch "$minui_list_file"
-
-    if [ -s "$RECENTS_PATH" ]; then
-        MOST_RECENT_GAME_NAME=$(head -n 1 "$RECENTS_PATH" | cut -f2)
-    else
-        MOST_RECENT_GAME_NAME="recents empty"
-    fi
-
-    echo "Add to Favorites" >> "$minui_list_file"
-    echo "Remove from Favorites" >> "$minui_list_file"
-    echo "Clear Recently Played" >> "$minui_list_file"
-
+cleanup() {
+    rm -f /tmp/stay_awake
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text --title "Recently Played: $MOST_RECENT_GAME_NAME"
-}
-
-add_favorite() {
-    if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The Recently Played list is empty." 5
-        return 1
-    fi
-
-    MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
-
-    mkdir -p "$COLLECTIONS_PATH"
-    touch "$FAVORITES_PATH"
-
-    if ! grep -Fxq "$MOST_RECENT_GAME" "$FAVORITES_PATH"; then
-        echo "$MOST_RECENT_GAME" >> "$FAVORITES_PATH"
-        awk -F'/' '{print $NF "|" $0}' "$FAVORITES_PATH" | sort -t'|' -k1,1 | cut -d'|' -f2- > "$FAVORITES_PATH.tmp"
-        mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
-    fi
-
-    show_message "Successfully added game to Favorites." 5
-    return 0
-}
-
-remove_favorite() {
-    if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The Recently Played list is empty." 5
-        return 1
-    fi
-
-    MOST_RECENT_GAME=$(head -n 1 "$RECENTS_PATH" | cut -f1)
-
-    if [ ! -s "$FAVORITES_PATH" ]; then
-        show_message "The Favorites list is empty" 5
-        return 1
-    fi
-
-    if grep -Fxq "$MOST_RECENT_GAME" "$FAVORITES_PATH"; then
-        grep -Fxv "$MOST_RECENT_GAME" "$FAVORITES_PATH" > "$FAVORITES_PATH.tmp"
-        mv "$FAVORITES_PATH.tmp" "$FAVORITES_PATH"
-    fi
-
-    if [ ! -s "$FAVORITES_PATH" ]; then
-        rm -f "$FAVORITES_PATH"
-    fi
-
-    show_message "Successfully removed game from Favorites." 5
-    return 0
-}
-
-clear_recents() {
-    if [ ! -s "$RECENTS_PATH" ]; then
-        show_message "The Recently Played list is empty." 5
-        return 1
-    fi
-
-    rm "$RECENTS_PATH"
-    touch "$RECENTS_PATH"
-
-    show_message "Successfully cleared the Recently Played list." 5
-    return 0
 }
 
 show_message() {
@@ -125,9 +51,95 @@ show_message() {
     fi
 }
 
-cleanup() {
-    rm -f /tmp/stay_awake
+add_favorite() {
+    recents="$RECENTS_PATH"
+    collections="$COLLECTIONS_PATH"
+    favorites="$FAVORITES_PATH"
+
+    if [ ! -s "$recents" ]; then
+        show_message "The Recently Played list is empty." 5
+        return 1
+    fi
+
+    most_recent_game=$(head -n 1 "$recents" | cut -f1)
+
+    mkdir -p "$collections"
+    touch "$favorites"
+
+    if ! grep -Fxq "$most_recent_game" "$favorites"; then
+        echo "$most_recent_game" >> "$favorites"
+        awk -F'/' '{print $NF "|" $0}' "$favorites" | sort -t'|' -k1,1 | cut -d'|' -f2- > "$favorites.tmp"
+        mv "$favorites.tmp" "$favorites"
+    fi
+
+    show_message "Successfully added game to Favorites." 5
+    return 0
+}
+
+remove_favorite() {
+    recents="$RECENTS_PATH"
+    collections="$COLLECTIONS_PATH"
+    favorites="$FAVORITES_PATH"
+
+    if [ ! -s "$recents" ]; then
+        show_message "The Recently Played list is empty." 5
+        return 1
+    fi
+
+    most_recent_game=$(head -n 1 "$recents" | cut -f1)
+
+    if [ ! -s "$favorites" ]; then
+        show_message "The Favorites list is empty" 5
+        return 1
+    fi
+
+    if grep -Fxq "$most_recent_game" "$favorites"; then
+        grep -Fxv "$most_recent_game" "$favorites" > "$favorites.tmp"
+        mv "$favorites.tmp" "$favorites"
+    fi
+
+    if [ ! -s "$favorites" ]; then
+        rm -f "$favorites"
+    fi
+
+    show_message "Successfully removed game from Favorites." 5
+    return 0
+}
+
+clear_recents() {
+    recents="$RECENTS_PATH"
+
+    if [ ! -s "$recents" ]; then
+        show_message "The Recently Played list is empty." 5
+        return 1
+    fi
+
+    rm "$recents"
+    touch "$recents"
+
+    show_message "Successfully cleared the Recently Played list." 5
+    return 0
+}
+
+main_screen() {
+    recents="$RECENTS_PATH"
+
+    minui_list_file="/tmp/minui-list"
+    rm -f "$minui_list_file"
+    touch "$minui_list_file"
+
+    if [ -s "$recents" ]; then
+        most_recent_game_name=$(head -n 1 "$recents" | cut -f2)
+    else
+        most_recent_game_name="recents empty"
+    fi
+
+    echo "Add to Favorites" >> "$minui_list_file"
+    echo "Remove from Favorites" >> "$minui_list_file"
+    echo "Clear Recently Played" >> "$minui_list_file"
+
     killall minui-presenter >/dev/null 2>&1 || true
+    minui-list --file "$minui_list_file" --format text --title "Recently Played: $most_recent_game_name"
 }
 
 main() {
