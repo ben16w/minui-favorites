@@ -4,7 +4,7 @@ App to manage a Favorites collection in [MinUI](https://github.com/shauninman/Mi
 
 ## Description
 
-This project is a MinUI app to manage a collection named "Favorites". The is app is packaged in a .pak folder to be used as a tool within MinUI. The current features include the ability to add and remove games from the Favorites collection, delete the collection and clear the Recently Played. The Favorites collection can be accessed under Collections in the main menu, and is sorted alphabetically.
+This project is a MinUI app to manage a collection named "Favorites". The app is packaged in a .pak folder to be used as a tool within MinUI. The current features include the ability to add and remove games from the Favorites collection, delete the collection and clear the Recently Played. The Favorites collection can be accessed under Collections in the main menu and is sorted alphabetically.
 
 ## Requirements
 
@@ -46,9 +46,9 @@ This option deletes the Favorites collection.
 
 ## Settings
 
-It is possible to change the word used for "Favorites" to another word of your choice. This will be reflected in the app and in the Collections menu. The can be used to, for example, change "Favorites" to British English "Favourites" or another language of your choice.
+It is possible to change the word used for "Favorites" to another word of your choice. This will be reflected in the app and in the Collections menu. This can be used to, for example, change "Favorites" to British English "Favourites" or another language of your choice.
 
-To do this, edit the `settings.json` file in the `Favorites.pak` folder. Change the value of `favorites_label` to the word you want to use. For example, to change "Favorites" to "Favourites", the settings section of the file would look like this:
+To do this, edit the `settings.json` file in the `Favorites.pak` folder. Change the value of `favorites_label` to the word you want to use. For example, to change "Favorites" to "Favourites" the settings section of the file would look like this:
 
 ```json
     "settings": {
@@ -56,13 +56,13 @@ To do this, edit the `settings.json` file in the `Favorites.pak` folder. Change 
     }
 ```
 
-You can also rename the `Favorites.pak` folder to the word you want to use. For example, to change "Favorites" to "Favourites", rename the folder to `Favourites.pak`.
+You can also rename the `Favorites.pak` folder to the word you want to use. For example, to change "Favorites" to "Favourites" rename the folder to `Favourites.pak`.
 
 ## Acknowledgements
 
 - [MinUI](https://github.com/shauninman/MinUI) by Shaun Inman
 - [minui-list](https://github.com/josegonzalez/minui-list) and [minui-presenter](https://github.com/josegonzalez/minui-presenter) by Jose Diaz-Gonzalez
-- Also thank you Jose Diaz-Gonzalez for your pak repositories, which this project is based on.
+- Also, thank you, Jose Diaz-Gonzalez, for your pak repositories, which this project is based on.
 
 ## License
 
