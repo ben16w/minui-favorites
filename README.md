@@ -36,13 +36,13 @@ This option allows you to add a game from Recently Played to the Favorites colle
 
 This option allows you to remove a game from the Favorites collection. If the Favorites collection is empty, it will be removed.
 
-### Clear Recently Played
-
-This option clears your Recently Played list.
-
 ### Delete Favorites
 
-This option deletes the Favorites collection.
+This option deletes the Favorites collection. You will be asked if you are sure you want to delete the collection before it is removed.
+
+### Clear Recently Played
+
+This option clears your Recently Played list. You will be asked if you are sure you want to clear the list before it is removed.
 
 ## Settings
 
