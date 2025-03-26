@@ -5,5 +5,8 @@
     "platforms": [
         "rg35xxplus",
         "tg5040"
-    ]
+    ],
+    "settings": {
+        "favorites_label": "Favorites"
+    }
 }
