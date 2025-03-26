@@ -24,8 +24,8 @@ export PATH="$PAK_DIR/bin/$architecture:$PAK_DIR/bin/$PLATFORM:$PAK_DIR/bin:$PAT
 
 COLLECTIONS_PATH="$SDCARD_PATH/Collections"
 RECENTS_PATH="$SHARED_USERDATA_PATH/.minui/recent.txt"
-FAVORITES_LABEL=""
-FAVORITES_PATH=""
+FAVORITES_LABEL="Favorites"
+FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
 
 cleanup() {
     rm -f /tmp/stay_awake
@@ -73,12 +73,14 @@ show_confirm() {
 load_settings() {
     config_file="$PAK_DIR/config.json"
     if [ ! -f "$config_file" ]; then
-        show_message "Config file not found: $config_file" 2
+        show_message "Config file $config_file not found." 2
         return 1
     fi
 
-    FAVORITES_LABEL=$(jq -r '.settings.favorites_label' "$config_file")
-    FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
+    if jq -e '.settings.favorites_label' "$config_file" >/dev/null 2>&1; then
+        FAVORITES_LABEL=$(jq -r '.settings.favorites_label' "$config_file")
+        FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
+    fi
 }
 
 prettify_game_name() {
@@ -148,7 +150,7 @@ add_favorite() {
     favorites="$FAVORITES_PATH"
 
     if [ ! -s "$recents" ]; then
-        show_message "Recently Played is empty." 5
+        show_message "Recently Played is empty." 2
         return 1
     fi
 
@@ -168,7 +170,7 @@ add_favorite() {
     fi
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "$pretty_game_name added to $FAVORITES_LABEL." 5
+    show_message "$pretty_game_name added to $FAVORITES_LABEL." 4
     return 0
 }
 
@@ -176,7 +178,7 @@ remove_favorite() {
     favorites="$FAVORITES_PATH"
 
     if [ ! -s "$favorites" ]; then
-        show_message "The $FAVORITES_LABEL list is empty." 5
+        show_message "The $FAVORITES_LABEL list is empty." 2
         return 1
     fi
 
@@ -194,7 +196,7 @@ remove_favorite() {
     fi
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "$pretty_game_name removed from $FAVORITES_LABEL." 5
+    show_message "$pretty_game_name removed from $FAVORITES_LABEL." 4
     return 0
 }
 
@@ -202,7 +204,7 @@ clear_recents() {
     recents="$RECENTS_PATH"
 
     if [ ! -s "$recents" ]; then
-        show_message "Recently Played is empty." 5
+        show_message "Recently Played is empty." 2
         return 1
     fi
 
@@ -213,7 +215,7 @@ clear_recents() {
     rm -f "$recents"
     touch "$recents"
 
-    show_message "Recently Played cleared." 5
+    show_message "Recently Played cleared." 4
     return 0
 }
 
@@ -221,7 +223,7 @@ delete_favorites() {
     favorites="$FAVORITES_PATH"
 
     if [ ! -s "$favorites" ]; then
-        show_message "The $FAVORITES_LABEL list is empty." 5
+        show_message "The $FAVORITES_LABEL list is empty." 2
         return 1
     fi
 
@@ -230,7 +232,7 @@ delete_favorites() {
     fi
 
     rm -f "$favorites"
-    show_message "$FAVORITES_LABEL deleted ." 5
+    show_message "$FAVORITES_LABEL deleted ." 4
     return 0
 }
 
@@ -276,23 +278,29 @@ main() {
     fi
 
     if ! command -v minui-list >/dev/null 2>&1; then
-        show_message "minui-list not found" 2
+        show_message "Minui-list not found." 2
         return 1
     fi
 
     if ! command -v minui-presenter >/dev/null 2>&1; then
-        show_message "minui-presenter not found" 2
+        show_message "Minui-presenter not found." 2
+        return 1
+    fi
+
+    if ! command -v jq >/dev/null 2>&1; then
+        show_message "Jq not found." 2
         return 1
     fi
 
     allowed_platforms="my282 tg5040 rg35xxplus miyoomini"
     if ! echo "$allowed_platforms" | grep -q "$PLATFORM"; then
-        show_message "$PLATFORM is not a supported platform" 2
+        show_message "$PLATFORM is not a supported platform." 2
         return 1
     fi
 
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-list"
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-presenter"
+    chmod +x "$PAK_DIR/bin/$architecture/jq"
 
     if ! load_settings; then
         return 1
