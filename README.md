@@ -46,7 +46,7 @@ This option deletes the Favorites collection.
 
 ## Settings
 
-It is possible to change the word used for "Favorites" to another word of your choice. This will be reflected in the app and in the Collections menu. The can be used to, for example, change "Favorites" to British English "Favourites" or another language of your choice.
+It is possible to change the word used for "Favorites" to another word of your choice. This will be reflected in the app and in the Collections menu. This can be used to, for example, change "Favorites" to British English "Favourites" or another language of your choice.
 
 To do this, edit the `settings.json` file in the `Favorites.pak` folder. Change the value of `favorites_label` to the word you want to use. For example, to change "Favorites" to "Favourites", the settings section of the file would look like this:
 

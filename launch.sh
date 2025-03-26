@@ -84,7 +84,7 @@ load_settings() {
 prettify_game_name() {
     game="$1"
     game_name=$(echo "$game" | cut -f1)
-    game_name=$(basename "$game_name" | cut -d'.' -f1 | sed -e 's/([^()]*)//g' -e 's/[[^]]*]//g' | xargs)
+    game_name=$(basename "$game_name" | cut -d'.' -f1 | sed -e 's/([^()]*)//g' -e 's/[[^]]*]//g')
     echo "$game_name"
 }
 
@@ -188,6 +188,10 @@ remove_favorite() {
 
     grep -Fxv "$selected_favorite" "$favorites" > "$favorites.tmp"
     mv "$favorites.tmp" "$favorites"
+
+    if [ ! -s "$favorites" ]; then
+        rm -f "$favorites"
+    fi
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
     show_message "$pretty_game_name removed from $FAVORITES_LABEL." 5
