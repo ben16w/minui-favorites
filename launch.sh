@@ -27,12 +27,12 @@ RECENTS_PATH="$SHARED_USERDATA_PATH/.minui/recent.txt"
 FAVORITES_LABEL="Favorites"
 FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
 
-cleanup() {
+cleanup() (
     rm -f /tmp/stay_awake
     killall minui-presenter >/dev/null 2>&1 || true
-}
+)
 
-show_message() {
+show_message() (
     message="$1"
     seconds="$2"
 
@@ -50,9 +50,9 @@ show_message() {
     else
         minui-presenter --message "$message" --timeout "$seconds"
     fi
-}
+)
 
-show_confirm() {
+show_confirm() (
     message="$1"
 
     killall minui-presenter >/dev/null 2>&1 || true
@@ -68,63 +68,51 @@ show_confirm() {
     fi
 
     return 0
-}
+)
 
-load_settings() {
-    config_file="$PAK_DIR/config.json"
-    if [ ! -f "$config_file" ]; then
-        show_message "Config file $config_file not found." 2
-        return 1
-    fi
+prettify_game_name() (
+    game_name="$1"
 
-    if jq -e '.settings.favorites_label' "$config_file" >/dev/null 2>&1; then
-        FAVORITES_LABEL=$(jq -r '.settings.favorites_label' "$config_file")
-        FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
-    fi
-}
-
-prettify_game_name() {
-    game="$1"
-    game_name=$(echo "$game" | cut -f1)
+    game_name=$(echo "$game_name" | cut -f1)
     game_name=$(basename "$game_name" | cut -d'.' -f1 | sed -e 's/([^()]*)//g' -e 's/[[^]]*]//g')
     echo "$game_name"
-}
+)
 
-prettify_game_list() {
+prettify_game_list() (
     game_list="$1"
 
-    list_file="/tmp/game-list"
-    rm -f "$list_file"
-    touch "$list_file"
+    temp_list_file="/tmp/game-list"
+    rm -f "$temp_list_file"
+    touch "$temp_list_file"
 
     while read -r game; do
-        prettify_game_name "$game" >> "$list_file"
+        prettify_game_name "$game" >> "$temp_list_file"
     done < "$game_list"
 
-    cat "$list_file"
-}
+    cat "$temp_list_file"
+)
 
-clean_favorites() {
+clean_favorites() (
     favorites="$FAVORITES_PATH"
     sd_path="$SDCARD_PATH"
 
-    temp_file="/tmp/cleaned-favorites"
-    rm -f "$temp_file"
-    touch "$temp_file"
+    temp_list_file="/tmp/favorites-list"
+    rm -f "$temp_list_file"
+    touch "$temp_list_file"
 
     while read -r favorite; do
         if [ -f "$sd_path/$favorite" ]; then
-            echo "$favorite" >> "$temp_file"
+            echo "$favorite" >> "$temp_list_file"
         fi
     done < "$favorites"
 
-    mv "$temp_file" "$favorites"
+    mv "$temp_list_file" "$favorites"
     return 0
-}
+)
 
-select_game() {
-    title="$1"
-    game_list_file="$2"
+select_game() (
+    game_list_file="$1"
+    title="$2"
 
     minui_list_file="/tmp/minui-list"
     rm -f "$minui_list_file"
@@ -135,26 +123,27 @@ select_game() {
     done
 
     killall minui-presenter >/dev/null 2>&1 || true
-    selected_favorite=$(minui-list --file "$minui_list_file" --format text --title "$title")
+    selected_game=$(minui-list --file "$minui_list_file" --format text --title "$title")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
     fi
 
-    grep -F "$selected_favorite" "$game_list_file"  | cut -f1
-}
+    grep -F "$selected_game" "$game_list_file"  | cut -f1
+)
 
-add_favorite() {
+add_favorite() (
     recents="$RECENTS_PATH"
     collections="$COLLECTIONS_PATH"
     favorites="$FAVORITES_PATH"
+    label="$FAVORITES_LABEL"
 
     if [ ! -s "$recents" ]; then
         show_message "Recently Played is empty." 2
         return 1
     fi
 
-    selected_favorite=$(select_game "Add a game from Recently Played." "$recents")
+    selected_favorite=$(select_game "$recents" "Add a game from Recently Played.")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
@@ -169,20 +158,21 @@ add_favorite() {
         mv "$favorites.tmp" "$favorites"
     fi
 
-    pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "$pretty_game_name added to $FAVORITES_LABEL." 4
+    pretty_selected_favorite=$(prettify_game_name "$selected_favorite")
+    show_message "$pretty_selected_favorite added to $label." 4
     return 0
-}
+)
 
-remove_favorite() {
+remove_favorite() (
     favorites="$FAVORITES_PATH"
+    label="$FAVORITES_LABEL"
 
     if [ ! -s "$favorites" ]; then
-        show_message "The $FAVORITES_LABEL list is empty." 2
+        show_message "The $label list is empty." 2
         return 1
     fi
 
-    selected_favorite=$(select_game "Select a game to remove." "$favorites")
+    selected_favorite=$(select_game "$favorites" "Select a game to remove.")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
@@ -195,12 +185,30 @@ remove_favorite() {
         rm -f "$favorites"
     fi
 
-    pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "$pretty_game_name removed from $FAVORITES_LABEL." 4
+    pretty_selected_favorite=$(prettify_game_name "$selected_favorite")
+    show_message "$pretty_selected_favorite removed from $label." 4
     return 0
-}
+)
 
-clear_recents() {
+delete_favorites() (
+    favorites="$FAVORITES_PATH"
+    label="$FAVORITES_LABEL"
+
+    if [ ! -s "$favorites" ]; then
+        show_message "The $label list is empty." 2
+        return 1
+    fi
+
+    if ! show_confirm "Are you sure you want to delete the $label collection?"; then
+        return 1
+    fi
+
+    rm -f "$favorites"
+    show_message "$label deleted." 4
+    return 0
+)
+
+clear_recents() (
     recents="$RECENTS_PATH"
 
     if [ ! -s "$recents" ]; then
@@ -217,28 +225,12 @@ clear_recents() {
 
     show_message "Recently Played cleared." 4
     return 0
-}
+)
 
-delete_favorites() {
-    favorites="$FAVORITES_PATH"
-
-    if [ ! -s "$favorites" ]; then
-        show_message "The $FAVORITES_LABEL list is empty." 2
-        return 1
-    fi
-
-    if ! show_confirm "Are you sure you want to delete $FAVORITES_LABEL?"; then
-        return 1
-    fi
-
-    rm -f "$favorites"
-    show_message "$FAVORITES_LABEL deleted ." 4
-    return 0
-}
-
-main_screen() {
+main_screen() (
     recents="$RECENTS_PATH"
     favorites="$FAVORITES_PATH"
+    label="$FAVORITES_LABEL"
 
     clean_favorites
 
@@ -246,11 +238,11 @@ main_screen() {
     rm -f "$minui_list_file"
     touch "$minui_list_file"
 
-    echo "Add to $FAVORITES_LABEL" >> "$minui_list_file"
+    echo "Add to $label" >> "$minui_list_file"
 
     if [ -s "$favorites" ]; then
-        echo "Remove from $FAVORITES_LABEL" >> "$minui_list_file"
-        echo "Delete $FAVORITES_LABEL" >> "$minui_list_file"
+        echo "Remove from $label" >> "$minui_list_file"
+        echo "Delete $label" >> "$minui_list_file"
     fi
 
     if [ -s "$recents" ]; then
@@ -258,7 +250,21 @@ main_screen() {
     fi
 
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text --title "$FAVORITES_LABEL Collection"
+    minui-list --file "$minui_list_file" --format text --title "$label Collection"
+)
+
+load_settings() {
+    config_file="$PAK_DIR/config.json"
+
+    if [ ! -f "$config_file" ]; then
+        show_message "Config file $config_file not found." 2
+        return 1
+    fi
+
+    if jq -e '.settings.favorites_label' "$config_file" >/dev/null 2>&1; then
+        FAVORITES_LABEL=$(jq -r '.settings.favorites_label' "$config_file")
+        FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
+    fi
 }
 
 main() {
