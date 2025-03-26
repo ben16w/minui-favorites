@@ -152,7 +152,7 @@ add_favorite() {
         return 1
     fi
 
-    selected_favorite=$(select_game "Select game from Recently Played" "$recents")
+    selected_favorite=$(select_game "Add a game from Recently Played." "$recents")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
@@ -168,7 +168,7 @@ add_favorite() {
     fi
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "Added $pretty_game_name to $FAVORITES_LABEL." 5
+    show_message "$pretty_game_name added to $FAVORITES_LABEL." 5
     return 0
 }
 
@@ -180,7 +180,7 @@ remove_favorite() {
         return 1
     fi
 
-    selected_favorite=$(select_game "Select game to remove" "$favorites")
+    selected_favorite=$(select_game "Select a game to remove." "$favorites")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
@@ -190,7 +190,7 @@ remove_favorite() {
     mv "$favorites.tmp" "$favorites"
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "Removed $pretty_game_name from $FAVORITES_LABEL." 5
+    show_message "$pretty_game_name removed from $FAVORITES_LABEL." 5
     return 0
 }
 
@@ -209,7 +209,7 @@ clear_recents() {
     rm -f "$recents"
     touch "$recents"
 
-    show_message "Cleared Recently Played." 5
+    show_message "Recently Played cleared." 5
     return 0
 }
 
@@ -221,12 +221,12 @@ delete_favorites() {
         return 1
     fi
 
-    if ! show_confirm "Are you sure you want to delete all $FAVORITES_LABEL?"; then
+    if ! show_confirm "Are you sure you want to delete $FAVORITES_LABEL?"; then
         return 1
     fi
 
     rm -f "$favorites"
-    show_message "Deleted all $FAVORITES_LABEL." 5
+    show_message "$FAVORITES_LABEL deleted ." 5
     return 0
 }
 
@@ -241,18 +241,18 @@ main_screen() {
     touch "$minui_list_file"
 
     echo "Add to $FAVORITES_LABEL" >> "$minui_list_file"
-    echo "Remove from $FAVORITES_LABEL" >> "$minui_list_file"
+
+    if [ -s "$favorites" ]; then
+        echo "Remove from $FAVORITES_LABEL" >> "$minui_list_file"
+        echo "Delete $FAVORITES_LABEL" >> "$minui_list_file"
+    fi
 
     if [ -s "$recents" ]; then
         echo "Clear Recently Played" >> "$minui_list_file"
     fi
 
-    if [ -s "$favorites" ]; then
-        echo "Delete $FAVORITES_LABEL" >> "$minui_list_file"
-    fi
-
     killall minui-presenter >/dev/null 2>&1 || true
-    minui-list --file "$minui_list_file" --format text --title "$FAVORITES_LABEL"
+    minui-list --file "$minui_list_file" --format text --title "$FAVORITES_LABEL Collection"
 }
 
 main() {
