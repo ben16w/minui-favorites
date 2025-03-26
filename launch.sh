@@ -24,8 +24,8 @@ export PATH="$PAK_DIR/bin/$architecture:$PAK_DIR/bin/$PLATFORM:$PAK_DIR/bin:$PAT
 
 COLLECTIONS_PATH="$SDCARD_PATH/Collections"
 RECENTS_PATH="$SHARED_USERDATA_PATH/.minui/recent.txt"
-FAVORITES_LABEL="Favorites"
-FAVORITES_PATH="$COLLECTIONS_PATH/1) $FAVORITES_LABEL.txt"
+FAVORITES_LABEL=""
+FAVORITES_PATH=""
 
 cleanup() {
     rm -f /tmp/stay_awake
@@ -148,11 +148,11 @@ add_favorite() {
     favorites="$FAVORITES_PATH"
 
     if [ ! -s "$recents" ]; then
-        show_message "The Recently Played list is empty." 5
+        show_message "Recently Played is empty." 5
         return 1
     fi
 
-    selected_favorite=$(select_game "Select game to add" "$recents")
+    selected_favorite=$(select_game "Select game from Recently Played" "$recents")
     exit_code=$?
     if [ "$exit_code" -ne 0 ]; then
         return 1
@@ -190,7 +190,7 @@ remove_favorite() {
     mv "$favorites.tmp" "$favorites"
 
     pretty_game_name=$(prettify_game_name "$selected_favorite")
-    show_message "Added $pretty_game_name to $FAVORITES_LABEL." 5
+    show_message "Removed $pretty_game_name from $FAVORITES_LABEL." 5
     return 0
 }
 
@@ -198,18 +198,18 @@ clear_recents() {
     recents="$RECENTS_PATH"
 
     if [ ! -s "$recents" ]; then
-        show_message "The Recently Played list is empty." 5
+        show_message "Recently Played is empty." 5
         return 1
     fi
 
-    if ! show_confirm "Are you sure you want to clear the Recently Played list?"; then
+    if ! show_confirm "Are you sure you want to clear Recently Played?"; then
         return 1
     fi
 
     rm -f "$recents"
     touch "$recents"
 
-    show_message "Cleared the Recently Played list." 5
+    show_message "Cleared Recently Played." 5
     return 0
 }
 
@@ -290,7 +290,9 @@ main() {
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-list"
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-presenter"
 
-    load_settings
+    if ! load_settings; then
+        return 1
+    fi
 
     while true; do
         selection="$(main_screen)"
