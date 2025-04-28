@@ -1,0 +1,22 @@
+{
+    "name": "Favorites",
+    "version": "0.3.2",
+    "type": "TOOL",
+    "description": "A Pak to manage a Favorites collection.",
+    "author": "ben16w",
+    "repo_url": "https://github.com/ben16w/minui-favorites",
+    "release_filename": "Favorites.pak.zip",
+    "banners": {
+        "BRICK": ".github/resources/banner.png"
+    },
+    "platforms": [
+        "tg5040",
+        "rg35xxplus",
+        "my282",
+        "miyoomini"
+    ],
+    "update_ignore": [
+        "config.json"
+    ],
+    "launch": "launch.sh"
+}

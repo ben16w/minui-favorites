@@ -1,5 +1,4 @@
-TAG ?= latest
-PAK_NAME := $(shell jq -r .label config.json)
+PAK_NAME := $(shell jq -r .name pak.json)
 
 ARCHITECTURES := arm arm64
 PLATFORMS := miyoomini my282 rg35xxplus tg5040
@@ -12,6 +11,10 @@ clean:
 	rm -f bin/*/minui-list || true
 	rm -f bin/*/minui-presenter || true
 	rm -f bin/*/jq || true
+
+bump-version:
+	jq '.version = "$(RELEASE_VERSION)"' pak.json > pak.json.tmp
+	mv pak.json.tmp pak.json
 
 build: $(foreach platform,$(PLATFORMS),bin/$(platform)/minui-list bin/$(platform)/minui-presenter)  $(foreach arch,$(ARCHITECTURES),bin/$(arch)/jq)
 
