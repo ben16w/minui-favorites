@@ -1,11 +1,4 @@
 {
-    "label": "Favorites",
-    "launch": "launch.sh",
-    "description": "Manage favorites",
-    "platforms": [
-        "rg35xxplus",
-        "tg5040"
-    ],
     "settings": {
         "favorites_label": "Favorites"
     }
