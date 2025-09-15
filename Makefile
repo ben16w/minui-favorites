@@ -1,22 +1,24 @@
 PAK_NAME := $(shell jq -r .name pak.json)
 
 ARCHITECTURES := arm arm64
-PLATFORMS := miyoomini my282 rg35xxplus tg5040
+PLATFORMS := miyoomini my282 my355 rg35xxplus tg5040 trimuismart
 
-MINUI_LIST_VERSION := 0.7.0
-MINUI_PRESENTER_VERSION := 0.4.0
+MINUI_LIST_VERSION := 0.11.4
+MINUI_PRESENTER_VERSION := 0.9.0
 JQ_VERSION := 1.7.1
 
 clean:
+	rm -f bin/*/jq || true
+	rm -f bin/*/jq.LICENSE || true
 	rm -f bin/*/minui-list || true
 	rm -f bin/*/minui-presenter || true
-	rm -f bin/*/jq || true
 
 bump-version:
 	jq '.version = "$(RELEASE_VERSION)"' pak.json > pak.json.tmp
 	mv pak.json.tmp pak.json
 
 build: $(foreach platform,$(PLATFORMS),bin/$(platform)/minui-list bin/$(platform)/minui-presenter)  $(foreach arch,$(ARCHITECTURES),bin/$(arch)/jq)
+	@echo "Build complete"
 
 bin/%/minui-list:
 	mkdir -p bin/$*

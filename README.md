@@ -9,11 +9,12 @@ This project is a MinUI app to manage a collection named "Favorites". The app is
 ## Requirements
 
 This pak is designed for the following MinUI Platforms and devices:
-
-- `miyoomini`: Miyoo Mini Plus (_not_ the Miyoo Mini)
-- `my282`: Miyoo A30
-- `rg35xxplus`: RG-35XX Plus, RG-34XX, RG-35XX H, RG-35XX SP
-- `tg5040`: Trimui Brick (formerly `tg3040`), Trimui Smart Pro
+    - `miyoomini`: Miyoo Mini Plus and the Miyoo Mini
+    - `my282`: Miyoo A30
+    - `my355`: Miyoo Flip
+    - `rg35xxplus`: RG-35XX Plus, RG-34XX, RG-35XX H, RG-35XX SP
+    - `tg5040`: Trimui Brick (formerly `tg3040`), Trimui Smart Pro
+    - `trimuismart`: Trimui Smart
 
 ## Installation
 
@@ -58,11 +59,11 @@ To do this, edit the `settings.json` file in the `Favorites.pak` folder. Change 
 
 You can also rename the `Favorites.pak` folder to the word you want to use. For example, to change "Favorites" to "Favourites" rename the folder to `Favourites.pak`.
 
-## Acknowledgements
+## Thanks
 
-- [MinUI](https://github.com/shauninman/MinUI) by Shaun Inman
-- [minui-list](https://github.com/josegonzalez/minui-list) and [minui-presenter](https://github.com/josegonzalez/minui-presenter) by Jose Diaz-Gonzalez
-- Also, thank you, Jose Diaz-Gonzalez, for your pak repositories, which this project is based on.
+- [Shaun Inman](https://github.com/shauninman) for developing [MinUI](https://github.com/shauninman/MinUI).
+- [josegonzalez](https://github.com/josegonzalez) for developing [minui-list](https://github.com/josegonzalez/minui-list) and [minui-presenter](https://github.com/josegonzalez/minui-presenter).
+- Also, thank you, [josegonzalez](https://github.com/josegonzalez), for your pak repositories, which this project is based on.
 
 ## License
 

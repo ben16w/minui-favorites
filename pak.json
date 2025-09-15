@@ -10,10 +10,12 @@
     "BRICK": ".github/resources/banner.png"
   },
   "platforms": [
-    "tg5040",
-    "rg35xxplus",
+    "miyoomini",
     "my282",
-    "miyoomini"
+    "my355",
+    "rg35xxplus",
+    "tg5040",
+    "trimuismart"
   ],
   "update_ignore": [
     "config.json"
