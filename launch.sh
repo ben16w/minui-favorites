@@ -19,8 +19,8 @@ if uname -m | grep -q '64'; then
 fi
 
 export HOME="$USERDATA_PATH/$PAK_NAME"
-export LD_LIBRARY_PATH="$PAK_DIR/lib/$PLATFORM:$PAK_DIR/lib:$LD_LIBRARY_PATH"
 export PATH="$PAK_DIR/bin/$architecture:$PAK_DIR/bin/$PLATFORM:$PAK_DIR/bin:$PATH"
+export LD_LIBRARY_PATH="$PAK_DIR/lib/$PLATFORM:$PAK_DIR/lib:$LD_LIBRARY_PATH"
 
 COLLECTIONS_PATH="$SDCARD_PATH/Collections"
 RECENTS_PATH="$SHARED_USERDATA_PATH/.minui/recent.txt"
@@ -276,11 +276,15 @@ main() {
         export PLATFORM="tg5040"
     fi
 
-    if [ "$PLATFORM" = "miyoomini" ] && [ -z "$DEVICE" ]; then
-        export DEVICE="miyoomini"
-        if [ -f /customer/app/axp_test ]; then
-            export DEVICE="miyoominiplus"
-        fi
+    if [ "$PLATFORM" = "tg3040" ] && [ -z "$DEVICE" ]; then
+        export DEVICE="brick"
+        export PLATFORM="tg5040"
+    fi
+
+    allowed_platforms="miyoomini my282 my355 rg35xxplus tg5040 trimuismart"
+    if ! echo "$allowed_platforms" | grep -q "$PLATFORM"; then
+        show_message "$PLATFORM is not a supported platform" 2
+        return 1
     fi
 
     if ! command -v minui-list >/dev/null 2>&1; then
@@ -298,15 +302,9 @@ main() {
         return 1
     fi
 
-    allowed_platforms="my282 tg5040 rg35xxplus miyoomini"
-    if ! echo "$allowed_platforms" | grep -q "$PLATFORM"; then
-        show_message "$PLATFORM is not a supported platform." 2
-        return 1
-    fi
-
+    chmod +x "$PAK_DIR/bin/$architecture/jq"
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-list"
     chmod +x "$PAK_DIR/bin/$PLATFORM/minui-presenter"
-    chmod +x "$PAK_DIR/bin/$architecture/jq"
 
     if ! load_settings; then
         return 1
