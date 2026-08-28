@@ -1,22 +1,24 @@
 PAK_NAME := $(shell jq -r .name pak.json)
 
 ARCHITECTURES := arm arm64
-PLATFORMS := miyoomini my282 rg35xxplus tg5040
+PLATFORMS := miyoomini my282 my355 rg35xxplus tg5040 trimuismart h700
 
-MINUI_LIST_VERSION := 0.7.0
-MINUI_PRESENTER_VERSION := 0.4.0
+MINUI_LIST_VERSION := 0.15.0
+MINUI_PRESENTER_VERSION := 0.13.0
 JQ_VERSION := 1.7.1
 
 clean:
+	rm -f bin/*/jq || true
+	rm -f bin/*/jq.LICENSE || true
 	rm -f bin/*/minui-list || true
 	rm -f bin/*/minui-presenter || true
-	rm -f bin/*/jq || true
 
 bump-version:
 	jq '.version = "$(RELEASE_VERSION)"' pak.json > pak.json.tmp
 	mv pak.json.tmp pak.json
 
 build: $(foreach platform,$(PLATFORMS),bin/$(platform)/minui-list bin/$(platform)/minui-presenter)  $(foreach arch,$(ARCHITECTURES),bin/$(arch)/jq)
+	@echo "Build complete"
 
 bin/%/minui-list:
 	mkdir -p bin/$*
@@ -27,6 +29,16 @@ bin/%/minui-presenter:
 	mkdir -p bin/$*
 	curl -f -o bin/$*/minui-presenter -sSL https://github.com/josegonzalez/minui-presenter/releases/download/$(MINUI_PRESENTER_VERSION)/minui-presenter-$*
 	chmod +x bin/$*/minui-presenter
+
+bin/h700/minui-list:
+	mkdir -p bin/h700
+	curl -f -o bin/h700/minui-list -sSL https://github.com/josegonzalez/minui-list/releases/download/$(MINUI_LIST_VERSION)/minui-list-h700-nextui
+	chmod +x bin/h700/minui-list
+
+bin/h700/minui-presenter:
+	mkdir -p bin/h700
+	curl -f -o bin/h700/minui-presenter -sSL https://github.com/josegonzalez/minui-presenter/releases/download/$(MINUI_PRESENTER_VERSION)/minui-presenter-h700-nextui
+	chmod +x bin/h700/minui-presenter
 
 bin/arm/jq:
 	mkdir -p bin/arm

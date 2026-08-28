@@ -6,5 +6,7 @@ bin/rg35xxplus/minui-list
 bin/rg35xxplus/minui-presenter
 bin/tg5040/minui-list
 bin/tg5040/minui-presenter
+bin/h700/minui-list
+bin/h700/minui-presenter
 bin/arm/jq
 bin/arm64/jq
