@@ -5,7 +5,7 @@ PLATFORMS := h700 m17 magicmini miyoomini my282 my355 rg35xx rg35xxplus rgb30 tg
 
 MINUI_LIST_VERSION := 0.15.0
 MINUI_PRESENTER_VERSION := 0.13.0
-JQ_VERSION := 1.7.1
+JQ_VERSION := 1.8.2
 
 clean:
 	rm -f bin/*/jq || true
@@ -53,12 +53,12 @@ bin/tg5050/minui-presenter:
 bin/arm/jq:
 	mkdir -p bin/arm
 	curl -f -o bin/arm/jq -sSL https://github.com/jqlang/jq/releases/download/jq-$(JQ_VERSION)/jq-linux-armhf
-	curl -sSL -o bin/arm/jq.LICENSE "https://raw.githubusercontent.com/jqlang/jq/refs/heads/$(JQ_VERSION)/COPYING"
+	curl -sSL -o bin/arm/jq.LICENSE "https://raw.githubusercontent.com/jqlang/jq/refs/tags/jq-$(JQ_VERSION)/COPYING"
 
 bin/arm64/jq:
 	mkdir -p bin/arm64
 	curl -f -o bin/arm64/jq -sSL https://github.com/jqlang/jq/releases/download/jq-$(JQ_VERSION)/jq-linux-arm64
-	curl -sSL -o bin/arm64/jq.LICENSE "https://raw.githubusercontent.com/jqlang/jq/refs/heads/$(JQ_VERSION)/COPYING"
+	curl -sSL -o bin/arm64/jq.LICENSE "https://raw.githubusercontent.com/jqlang/jq/refs/tags/jq-$(JQ_VERSION)/COPYING"
 
 release: build
 	mkdir -p dist
