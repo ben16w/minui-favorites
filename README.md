@@ -9,13 +9,19 @@ This project is a MinUI app to manage a collection named "Favorites". The app is
 ## Requirements
 
 This pak is designed for the following MinUI Platforms and devices:
-    - `miyoomini`: Miyoo Mini Plus and the Miyoo Mini
+    - `h700`: Anbernic RG35XX SP, RG SP (NextUI only)
+    - `m17`: M17
+    - `magicmini`: MagicX XU Mini M
+    - `miyoomini`: Miyoo Mini, Miyoo Mini Plus, Miyoo Mini Flip
     - `my282`: Miyoo A30
     - `my355`: Miyoo Flip
-    - `rg35xxplus`: RG-35XX Plus, RG-34XX, RG-35XX H, RG-35XX SP
+    - `rg35xx`: Anbernic RG35XX
+    - `rg35xxplus`: Anbernic RG35XX Plus, RG-34XX, RG-35XX H, RG-35XX SP
+    - `rgb30`: Powkiddy RGB30
     - `tg5040`: Trimui Brick (formerly `tg3040`), Trimui Smart Pro
+    - `tg5050`: Trimui Smart Pro S (NextUI only)
     - `trimuismart`: Trimui Smart
-    - `h700`: RG35XX SP, RG SP (running baseOS/NextUI)
+    - `zero28`: MagicX Mini Zero 28
 
 ## Installation
 
@@ -63,6 +69,7 @@ You can also rename the `Favorites.pak` folder to the word you want to use. For 
 ## Thanks
 
 - [Shaun Inman](https://github.com/shauninman) for developing [MinUI](https://github.com/shauninman/MinUI).
+- [frysee](https://github.com/frysee) and the rest of the NextUI contributors for developing [NextUI](https://github.com/LoveRetro/NextUI).
 - [josegonzalez](https://github.com/josegonzalez) for developing [minui-list](https://github.com/josegonzalez/minui-list) and [minui-presenter](https://github.com/josegonzalez/minui-presenter).
 - Also, thank you, [josegonzalez](https://github.com/josegonzalez), for your pak repositories, which this project is based on.
 

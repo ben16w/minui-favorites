@@ -281,7 +281,7 @@ main() {
         export PLATFORM="tg5040"
     fi
 
-    allowed_platforms="miyoomini my282 my355 rg35xxplus tg5040 trimuismart h700"
+    allowed_platforms="h700 m17 magicmini miyoomini my282 my355 rg35xx rg35xxplus rgb30 tg5040 tg5050 trimuismart zero28"
     if ! echo "$allowed_platforms" | grep -q "$PLATFORM"; then
         show_message "$PLATFORM is not a supported platform" 2
         return 1
