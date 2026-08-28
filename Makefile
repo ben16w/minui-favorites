@@ -52,6 +52,6 @@ bin/arm64/jq:
 
 release: build
 	mkdir -p dist
-	rm -f "dist/$(PAK_NAME).pak.zip"
-	zip -r "dist/$(PAK_NAME).pak.zip" . -x "dist/*" -x ".git/*" -x "*.git*"
+	git archive --format=zip --output "dist/$(PAK_NAME).pak.zip" HEAD
+	while IFS= read -r file; do zip -r "dist/$(PAK_NAME).pak.zip" "$$file"; done < .gitarchiveinclude
 	ls -lah dist
