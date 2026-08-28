@@ -42,9 +42,6 @@ show_message() (
 
     killall minui-presenter >/dev/null 2>&1 || true
     echo "$message" 1>&2
-    if [ "$PLATFORM" = "miyoomini" ]; then
-        return 0
-    fi
     if [ "$seconds" = "forever" ]; then
         minui-presenter --message "$message" --timeout -1 &
     else
@@ -96,6 +93,8 @@ clean_favorites() (
     favorites="$FAVORITES_PATH"
     sd_path="$SDCARD_PATH"
 
+    [ -f "$favorites" ] || return 0
+
     temp_list_file="/tmp/favorites-list"
     rm -f "$temp_list_file"
     touch "$temp_list_file"
@@ -107,6 +106,11 @@ clean_favorites() (
     done < "$favorites"
 
     mv "$temp_list_file" "$favorites"
+
+    if [ ! -s "$favorites" ]; then
+        rm -f "$favorites"
+    fi
+
     return 0
 )
 
@@ -149,10 +153,8 @@ add_favorite() (
         return 1
     fi
 
-    mkdir -p "$collections"
-    touch "$favorites"
-
-    if ! grep -Fxq "$selected_favorite" "$favorites"; then
+    if [ ! -f "$favorites" ] || ! grep -Fxq "$selected_favorite" "$favorites"; then
+        mkdir -p "$collections"
         echo "$selected_favorite" >> "$favorites"
         awk -F'/' '{print $NF "|" $0}' "$favorites" | sort -t'|' -k1,1 | cut -d'|' -f2- > "$favorites.tmp"
         mv "$favorites.tmp" "$favorites"
@@ -270,11 +272,6 @@ load_settings() {
 main() {
     echo "1" >/tmp/stay_awake
     trap "cleanup" EXIT INT TERM HUP QUIT
-
-    if [ "$PLATFORM" = "tg3040" ] && [ -z "$DEVICE" ]; then
-        export DEVICE="brick"
-        export PLATFORM="tg5040"
-    fi
 
     if [ "$PLATFORM" = "tg3040" ] && [ -z "$DEVICE" ]; then
         export DEVICE="brick"
