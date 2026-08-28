@@ -10,13 +10,19 @@
     "BRICK": ".github/resources/banner.png"
   },
   "platforms": [
+    "h700",
+    "m17",
+    "magicmini",
     "miyoomini",
     "my282",
     "my355",
+    "rg35xx",
     "rg35xxplus",
+    "rgb30",
     "tg5040",
+    "tg5050",
     "trimuismart",
-    "h700"
+    "zero28"
   ],
   "update_ignore": [
     "config.json"
