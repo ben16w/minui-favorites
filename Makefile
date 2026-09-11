@@ -3,8 +3,8 @@ PAK_NAME := $(shell jq -r .name pak.json)
 ARCHITECTURES := arm arm64
 PLATFORMS := h700 m17 magicmini miyoomini my282 my355 rg35xx rg35xxplus rgb30 tg5040 tg5050 trimuismart zero28
 
-MINUI_LIST_VERSION := 0.15.0
-MINUI_PRESENTER_VERSION := 0.13.0
+MINUI_LIST_VERSION := 0.15.1
+MINUI_PRESENTER_VERSION := 0.13.1
 JQ_VERSION := 1.8.2
 
 clean:
